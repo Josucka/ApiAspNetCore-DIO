@@ -1,4 +1,5 @@
-﻿using ApiAspNetCore.InputModel;
+﻿using ApiAspNetCore.Exception;
+using ApiAspNetCore.InputModel;
 using ApiAspNetCore.Service;
 using ApiAspNetCore.ViewModel;
 using Microsoft.AspNetCore.Http;
@@ -53,7 +54,7 @@ namespace ApiAspNetCore.Controllers.V1
 
                 return Ok(jogo);
             }
-            catch(Exception ex)
+            catch(JogoJaCadastradoException ex)
             {
                 return UnprocessableEntity("ja existe um jogo com este nome com a mesma produtora");
 
@@ -69,7 +70,7 @@ namespace ApiAspNetCore.Controllers.V1
 
                 return Ok();
             }
-            catch(Exception ex)
+            catch(JogoNaoCadastradoException ex)
             {
                 return NotFound("Jogo inexistente");
             }
@@ -84,7 +85,7 @@ namespace ApiAspNetCore.Controllers.V1
 
                 return Ok();
             }
-            catch(Exception ex)
+            catch(JogoNaoCadastradoException ex)
             {
                 return NotFound("Jogo inexistente");
             }
@@ -99,7 +100,7 @@ namespace ApiAspNetCore.Controllers.V1
 
                 return Ok();
             }
-            catch(Exception ex)
+            catch(JogoNaoCadastradoException ex)
             {
                 return NotFound("Jogo nao existe");
             }

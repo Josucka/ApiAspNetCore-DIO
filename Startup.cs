@@ -1,3 +1,5 @@
+using ApiAspNetCore.Controllers.V1;
+using ApiAspNetCore.Middleware;
 using ApiAspNetCore.Repository;
 using ApiAspNetCore.Service;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +13,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ApiAspNetCore
@@ -29,12 +33,20 @@ namespace ApiAspNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IJogoService, JogoService>();
-            services.AddScoped<IJogoRepository, JogoRepository>();
+            services.AddScoped<IJogoRepository, JogoSqlServiceRepositoty>();
+
+            services.AddSingleton<IExemploSingleton, ExemploCicloDeVida>();
+            services.AddSingleton<IExemploScoped, ExemploCicloDeVida>();
+            services.AddSingleton<IExemploTransient, ExemploCicloDeVida>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiAspNetCore", Version = "v1" });
+
+                var basePath = AppDomain.CurrentDomain.BaseDirectory;
+                var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
+                c.IncludeXmlComments(Path.Combine(basePath, fileName));
             });
         }
 
@@ -47,6 +59,8 @@ namespace ApiAspNetCore
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiAspNetCore v1"));
             }
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 

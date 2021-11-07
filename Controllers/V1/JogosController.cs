@@ -23,6 +23,12 @@ namespace ApiAspNetCore.Controllers.V1
             _jogoService = jogoService;
         }
 
+        /// <summary>
+        /// metodo pra obter a pagina e quantidade
+        /// </summary>
+        /// <param name="pagina"></param>
+        /// <param name="quantidade"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<List<JogoViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
         {

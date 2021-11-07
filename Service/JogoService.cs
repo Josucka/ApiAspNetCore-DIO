@@ -48,7 +48,7 @@ namespace ApiAspNetCore.Service
 
         public async Task DeleteJogo(Guid id)
         {
-            var jogo = _jogoRepository.Remover(id);
+            var jogo = await _jogoRepository.Obter(id);
             
             if(jogo == null)
                 throw new JogoNaoCadastradoException();
